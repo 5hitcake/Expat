@@ -69,6 +69,8 @@ body {
   font-weight: 700;
   font-size: 1.1rem;
   letter-spacing: -0.01em;
+  color: inherit;
+  text-decoration: none;
 }
 .logo-accent { color: var(--accent); }
 .nav-tag {
@@ -215,6 +217,17 @@ h1 {
   color: var(--text-muted);
   font-size: 0.95rem;
 }
+.feature-link {
+  display: inline-block;
+  margin-top: 14px;
+  color: var(--accent);
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-decoration: none;
+}
+.feature-link:hover {
+  text-decoration: underline;
+}
 
 /* CTA */
 .cta {
@@ -234,4 +247,128 @@ h1 {
   text-align: center;
   color: var(--text-muted);
   font-size: 0.9rem;
+}
+.site-footer a {
+  color: var(--text-muted);
+}
+
+/* Guide pages */
+.guide-header {
+  padding: 56px 0 32px;
+  text-align: center;
+}
+.guide-header .lede {
+  margin-bottom: 0;
+}
+
+.guide-disclaimer {
+  padding: 0 0 40px;
+}
+.guide-disclaimer .wrap {
+  max-width: 700px;
+}
+.guide-disclaimer p {
+  background: var(--bg-alt);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 16px 20px;
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  margin: 0;
+}
+
+.guide-body {
+  padding-bottom: 24px;
+}
+.guide-body .wrap {
+  max-width: 700px;
+}
+
+.phase {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 28px;
+  margin-bottom: 24px;
+  box-shadow: var(--shadow);
+}
+.phase-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.phase-head h2 {
+  font-size: 1.2rem;
+  margin: 0;
+}
+.phase-progress {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 14%, transparent);
+  border-radius: 999px;
+  padding: 4px 12px;
+  white-space: nowrap;
+}
+.phase-note {
+  color: var(--text-muted);
+  font-size: 0.92rem;
+  margin: 12px 0 20px;
+}
+
+.checklist {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.checklist li {
+  border-top: 1px solid var(--border);
+}
+.checklist li:first-child {
+  border-top: none;
+}
+.checklist label {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px 2px;
+  cursor: pointer;
+  font-size: 0.97rem;
+}
+.checklist input[type="checkbox"] {
+  margin-top: 4px;
+  width: 18px;
+  height: 18px;
+  accent-color: var(--accent);
+  flex-shrink: 0;
+}
+.checklist input[type="checkbox"]:checked + span,
+.checklist li:has(input:checked) label {
+  color: var(--text-muted);
+  text-decoration: line-through;
+}
+
+.sources {
+  background: var(--bg-alt);
+  border-top: 1px solid var(--border);
+  padding: 48px 0;
+}
+.sources .wrap {
+  max-width: 700px;
+}
+.sources h2 {
+  font-size: 1.15rem;
+  margin: 0 0 16px;
+}
+.sources ul {
+  padding-left: 20px;
+  margin: 0;
+}
+.sources li {
+  margin-bottom: 8px;
+}
+.sources a {
+  color: var(--text);
 }
