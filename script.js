@@ -1,5 +1,12 @@
 document.querySelectorAll(".waitlist-form").forEach((form) => {
   form.addEventListener("submit", async (event) => {
+    if (form.action.includes("list-manage.com")) {
+      // Mailchimp doesn't accept cross-origin AJAX submissions from another
+      // domain - let the browser submit normally. The form's target="_blank"
+      // opens Mailchimp's own confirmation page in a new tab.
+      return;
+    }
+
     event.preventDefault();
 
     const status = document.getElementById("form-status");
