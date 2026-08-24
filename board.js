@@ -224,12 +224,19 @@ const SUPABASE_KEY = "sb_publishable_Ci5wrxnimzEsOshQfXVaDA_QM4YRZGq";
 
       let imageUrl = null;
       if (pendingFile) {
-        const path = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}-${pendingFile.name}`;
-        const { error: uploadError } = await sb.storage.from("board-images").upload(path, pendingFile);
-        if (!uploadError) {
-          const { data } = sb.storage.from("board-images").getPublicUrl(path);
-          imageUrl = data.publicUrl;
+        const safeName = pendingFile.name.replace(/[^a-zA-Z0-9.\-_]/g, "_");
+        const path = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}-${safeName}`;
+        const { error: uploadError } = await sb.storage
+          .from("board-images")
+          .upload(path, pendingFile, { contentType: pendingFile.type || "image/jpeg" });
+        if (uploadError) {
+          postBtn.disabled = false;
+          postBtn.textContent = "Post";
+          alert("Image upload failed: " + uploadError.message);
+          return;
         }
+        const { data } = sb.storage.from("board-images").getPublicUrl(path);
+        imageUrl = data.publicUrl;
       }
 
       const { error } = await sb
