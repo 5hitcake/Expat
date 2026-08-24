@@ -1,51 +1,52 @@
 # Expat BA (working name)
 
-Landing page + email waitlist to validate demand for an app that helps
-foreigners moving to Buenos Aires with the practical stuff: DNI, CUIT, bank
-account, housing without a local guarantor, safely changing money, and
-vetted English-speaking contacts (doctors, agents, lawyers).
+Free resource (and eventually app) for foreigners moving to Buenos Aires:
+step-by-step guides for the practical/bureaucratic stuff (DNI, CUIT/CUIL,
+visas, apostille, tax residency, bank account, housing, health insurance,
+SUBE/phone, money exchange), plus a growing waitlist. Monetization plan is
+affiliate/commission on relevant products (SIM cards, insurance, etc.),
+not subscriptions — the content stays free.
 
-This repo currently contains **only the validation landing page** — no
-app yet. The idea is to see if people actually sign up before building
-anything bigger.
+Started as a pure landing page to validate demand; now an installable PWA
+with 11+ guides, a waitlist funnel (Mailchimp), and analytics
+(GoatCounter).
 
 ## Files
 
-- `index.html` — the page
-- `style.css` — styling (light/dark aware)
-- `script.js` — waitlist form handling (Formspree, AJAX)
+- `index.html` — homepage
+- `guides/` — all guide pages + the guides hub (`guides/index.html`)
+- `style.css` — shared styling (light/dark aware)
+- `script.js` — waitlist form handling + service worker registration
+- `guides/guide.js` — checklist checkbox persistence (localStorage)
+- `guides/country-select.js` — country tab switcher (apostille guide)
+- `manifest.json`, `sw.js`, `icons/` — PWA (installable, works offline for
+  already-visited pages)
 
-## Setup: connect the waitlist form (required)
+## Waitlist
 
-The signup form currently points at a placeholder
-(`https://formspree.io/f/YOUR_FORM_ID`) and will **not** collect emails
-until you connect a real form backend:
-
-1. Create a free account at [formspree.io](https://formspree.io)
-2. Create a new form, copy its form ID (looks like `xzznkba`)
-3. In `index.html`, replace both occurrences of `YOUR_FORM_ID` with your
-   real form ID
-4. Commit and push — signups will now land in your Formspree dashboard
-   (and can be forwarded to email or exported to CSV)
-
-Any other form backend (Google Forms, a custom endpoint, Mailchimp, etc.)
-works too — just change the form `action` and adjust `script.js` if the
-response format differs.
+Forms post to a Mailchimp audience (see the `action` URL in any
+`.waitlist-form`). Submissions require email confirmation (double
+opt-in) unless the address was previously imported as already-subscribed.
 
 ## Deploy: GitHub Pages (free, no build step)
 
-1. Go to **Settings → Pages** in this repo
-2. Under "Build and deployment", choose **Deploy from a branch**
-3. Branch: `main`, folder: `/ (root)`
-4. Save — the page will be live at `https://5hitcake.github.io/expat/`
-   within a minute or two
+Settings → Pages → Deploy from a branch → `main` → `/ (root)`. Live at
+`https://5hitcake.github.io/Expat/`.
 
-## Next steps
+## Status
 
-- [ ] Connect Formspree
-- [ ] Enable GitHub Pages
-- [ ] Share the link in relevant expat/digital nomad communities (Facebook
-      groups, Reddit, forums) to start collecting signups
-- [ ] Decide on final name/branding
-- [ ] Once there's real signal, scope the first real version (checklists
-      content, then community features)
+- [x] Landing page, waitlist (Mailchimp), analytics (GoatCounter)
+- [x] 11 guides covering the main visa/bureaucracy/practical topics
+- [x] PWA (installable on iOS/Android, no custom domain needed)
+- [ ] Custom domain — deliberately skipped for now (no budget), fine to
+      revisit once there's a settled name and more traction
+- [ ] Personalization (no-account quiz that tailors which guides to show)
+- [ ] Vetted contacts directory (needs real curation, not fabricated)
+- [ ] Affiliate links (researched: SafetyWing, Wise, Holafly/Airalo,
+      Booking.com — on hold until the product direction is clearer)
+
+## Ideas for later (not started, just captured so they don't get lost)
+
+- **Chat / posting feature** — a way for users to talk to each other and
+  post, not just read guides. Ties into the "community" concept from the
+  original pitch. No urgency, just don't want to lose the idea.
