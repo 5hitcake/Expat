@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Health Insurance Checklist — Expat BA</title>
 <meta name="description" content="Obra social vs. prepaga, and what changed in August 2026 for non-resident foreigners at public hospitals in Buenos Aires.">
-<link rel="stylesheet" href="../style.css?v=1">
+<link rel="stylesheet" href="../style.css?v=2">
 <link rel="manifest" href="../manifest.json">
 <link rel="icon" type="image/png" href="../icons/icon-192.png">
 <link rel="apple-touch-icon" href="../icons/icon-192.png">
@@ -21,6 +21,7 @@
     <a href="../index.html" class="logo">Expat<span class="logo-accent">BA</span></a>
     <a href="../board.html" class="nav-board-link">Board</a>
     <span class="nav-tag">Guide · Health Insurance</span>
+    <button type="button" id="menu-toggle" class="menu-toggle" aria-label="Menu">&#9776;</button>
   </div>
 </header>
 
@@ -131,5 +132,25 @@
 
 <script src="../script.js"></script>
 <script src="guide.js"></script>
+<div id="site-menu-overlay" class="site-menu-overlay" hidden></div>
+<nav id="site-menu" class="site-menu" hidden aria-label="Site menu" data-root="../">
+  <button type="button" id="site-menu-close" class="site-menu-close" aria-label="Close menu">&times;</button>
+  <a href="../board.html" class="site-menu-board">Board</a>
+  <a href="../index.html" class="site-menu-link">Home</a>
+  <p class="site-menu-heading">Guides</p>
+      <a href="visa-decision.html" class="site-menu-link">Which visa <span class="site-menu-progress" data-progress="visa-decision"></span></a>
+      <a href="apostille.html" class="site-menu-link">Apostille &amp; translations <span class="site-menu-progress" data-progress="apostille"></span></a>
+      <a href="dni-cuit.html" class="site-menu-link">DNI, CUIT &amp; CUIL <span class="site-menu-progress" data-progress="dni-cuit"></span></a>
+      <a href="tax-residency.html" class="site-menu-link">Tax residency <span class="site-menu-progress" data-progress="tax-residency"></span></a>
+      <a href="housing.html" class="site-menu-link">Renting without a guarantor <span class="site-menu-progress" data-progress="housing"></span></a>
+      <a href="neighborhoods.html" class="site-menu-link">Which neighborhood <span class="site-menu-progress" data-progress="neighborhoods"></span></a>
+      <a href="health-insurance.html" class="site-menu-link">Health insurance <span class="site-menu-progress" data-progress="health-insurance"></span></a>
+      <a href="bank-account.html" class="site-menu-link">Bank account <span class="site-menu-progress" data-progress="bank-account"></span></a>
+      <a href="sube-phone.html" class="site-menu-link">SUBE &amp; phone plan <span class="site-menu-progress" data-progress="sube-phone"></span></a>
+      <a href="money-exchange.html" class="site-menu-link">Changing money <span class="site-menu-progress" data-progress="money-exchange"></span></a>
+  <button type="button" id="site-menu-signout" class="site-menu-signout" hidden>Sign out of Board</button>
+</nav>
+<script src="../menu.js?v=1"></script>
+
 </body>
 </html>
