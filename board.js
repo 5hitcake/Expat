@@ -347,46 +347,42 @@ const SUPABASE_KEY = "sb_publishable_Ci5wrxnimzEsOshQfXVaDA_QM4YRZGq";
     });
   }
 
-  async function uploadOnce(path, blob, contentType) {
-    // Uploading via a raw binary POST instead of supabase-js's default
-    // (which wraps the file in multipart/form-data) - some ISP routers
-    // filter/mangle multipart file uploads, which showed up as a plain
-    // "Failed to fetch" with no useful detail.
+  async function uploadOnce(file, blob, contentType) {
+    // Direct browser -> Supabase Storage uploads consistently fail on this
+    // site (confirmed not a network/device issue - other browser uploads
+    // work fine, and uploading straight in the Supabase dashboard works
+    // too). Route through an Edge Function instead: the function makes a
+    // server-to-server call to Storage, which isn't subject to whatever is
+    // blocking the direct browser request.
     const { data: sessionData } = await sb.auth.getSession();
     const token = (sessionData.session && sessionData.session.access_token) || SUPABASE_KEY;
     try {
-      const res = await fetch(`${SUPABASE_URL}/storage/v1/object/board-images/${path}`, {
+      const res = await fetch(`${SUPABASE_URL}/functions/v1/upload-board-image`, {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,
           apikey: SUPABASE_KEY,
           "Content-Type": contentType,
-          "x-upsert": "false",
+          "x-filename": file.name || "upload.jpg",
         },
         body: blob,
       });
-      if (res.ok) return { error: null };
-      let message = `HTTP ${res.status}`;
-      try {
-        const body = await res.json();
-        message = body.message || body.error || message;
-      } catch (err) {
-        // ignore - keep the HTTP status as the message
-      }
-      return { error: { message } };
+      const body = await res.json().catch(() => ({}));
+      if (res.ok && body.url) return { error: null, url: body.url };
+      return { error: { message: body.error || `HTTP ${res.status}` } };
     } catch (err) {
       return { error: { message: err.message || "Network error" } };
     }
   }
 
-  async function uploadWithRetry(path, blob, contentType) {
+  async function uploadWithRetry(file, blob, contentType) {
     for (let attempt = 0; attempt < 2; attempt++) {
-      const { error } = await uploadOnce(path, blob, contentType);
-      if (!error) return { error: null };
+      const result = await uploadOnce(file, blob, contentType);
+      if (!result.error) return result;
       if (attempt === 0) {
         await new Promise((resolve) => setTimeout(resolve, 1200));
       } else {
-        return { error };
+        return result;
       }
     }
   }
@@ -417,17 +413,15 @@ const SUPABASE_KEY = "sb_publishable_Ci5wrxnimzEsOshQfXVaDA_QM4YRZGq";
       if (file) {
         postBtn.textContent = "Preparing photo...";
         const compressed = await compressImage(file, 1600, 0.82);
-        const path = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}.jpg`;
         postBtn.textContent = "Posting...";
-        const { error: uploadError } = await uploadWithRetry(path, compressed, "image/jpeg");
+        const { error: uploadError, url } = await uploadWithRetry(file, compressed, "image/jpeg");
         if (uploadError) {
           postBtn.disabled = false;
           postBtn.textContent = "Post";
           alert("Image upload failed: " + uploadError.message + ". Please check your connection and try again.");
           return;
         }
-        const { data } = sb.storage.from("board-images").getPublicUrl(path);
-        imageUrl = data.publicUrl;
+        imageUrl = url;
       }
 
       const { error } = await sb
