@@ -599,6 +599,40 @@ h1 {
   margin-bottom: 10px;
   display: block;
 }
+.board-post-gallery {
+  display: grid;
+  gap: 6px;
+  margin-bottom: 10px;
+}
+.board-post-gallery img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 10px;
+  display: block;
+}
+.board-post-gallery-2 {
+  grid-template-columns: repeat(2, 1fr);
+}
+.board-post-gallery-2 img {
+  aspect-ratio: 1 / 1;
+}
+.board-post-gallery-3 {
+  grid-template-columns: repeat(2, 1fr);
+}
+.board-post-gallery-3 img:first-child {
+  grid-row: span 2;
+  aspect-ratio: 1 / 2;
+}
+.board-post-gallery-3 img:not(:first-child) {
+  aspect-ratio: 2 / 1;
+}
+.board-post-gallery-4 {
+  grid-template-columns: repeat(2, 1fr);
+}
+.board-post-gallery-4 img {
+  aspect-ratio: 1 / 1;
+}
 .board-post-actions {
   display: flex;
   gap: 16px;

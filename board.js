@@ -107,6 +107,16 @@ const SUPABASE_KEY = "sb_publishable_Ci5wrxnimzEsOshQfXVaDA_QM4YRZGq";
     `;
   }
 
+  function imagesHtml(post) {
+    const urls = (post.image_urls && post.image_urls.length) ? post.image_urls : (post.image_url ? [post.image_url] : []);
+    if (!urls.length) return "";
+    if (urls.length === 1) {
+      return `<img class="board-post-image" src="${urls[0]}" alt="">`;
+    }
+    const items = urls.map((u) => `<img src="${u}" alt="">`).join("");
+    return `<div class="board-post-gallery board-post-gallery-${Math.min(urls.length, 4)}">${items}</div>`;
+  }
+
   function renderPost(post, postComments) {
     const isOwner = currentUserId && post.user_id === currentUserId;
     const commentsHtml = postComments.map((c) => renderComment(c)).join("");
@@ -123,7 +133,7 @@ const SUPABASE_KEY = "sb_publishable_Ci5wrxnimzEsOshQfXVaDA_QM4YRZGq";
         </div>
         <div class="board-post-body" data-post-body="${post.id}">
           ${post.body ? `<p class="board-post-text">${escapeHtml(post.body)}</p>` : ""}
-          ${post.image_url ? `<img class="board-post-image" src="${post.image_url}" alt="">` : ""}
+          ${imagesHtml(post)}
         </div>
         <div class="board-post-actions">
           <button type="button" data-toggle-comments="${post.id}">${postComments.length} comments</button>
@@ -297,22 +307,32 @@ const SUPABASE_KEY = "sb_publishable_Ci5wrxnimzEsOshQfXVaDA_QM4YRZGq";
   await updateGateState();
   await loadFeed();
 
+  const MAX_PHOTOS = 6;
   const imageInput = document.getElementById("board-image");
   const imageNameLabel = document.getElementById("composer-image-name");
   if (imageInput) {
     imageInput.addEventListener("change", () => {
-      const file = imageInput.files[0];
-      if (!file) {
+      const files = Array.from(imageInput.files || []);
+      if (!files.length) {
         if (imageNameLabel) imageNameLabel.textContent = "";
         return;
       }
-      if (file.size > 5 * 1024 * 1024) {
-        alert("Please choose an image under 5MB.");
+      if (files.length > MAX_PHOTOS) {
+        alert(`Please choose at most ${MAX_PHOTOS} photos.`);
         imageInput.value = "";
         if (imageNameLabel) imageNameLabel.textContent = "";
         return;
       }
-      if (imageNameLabel) imageNameLabel.textContent = file.name;
+      const tooBig = files.find((f) => f.size > 5 * 1024 * 1024);
+      if (tooBig) {
+        alert(`"${tooBig.name}" is over 5MB. Please choose smaller photos.`);
+        imageInput.value = "";
+        if (imageNameLabel) imageNameLabel.textContent = "";
+        return;
+      }
+      if (imageNameLabel) {
+        imageNameLabel.textContent = files.length === 1 ? files[0].name : `${files.length} photos selected`;
+      }
     });
   }
 
@@ -394,30 +414,17 @@ const SUPABASE_KEY = "sb_publishable_Ci5wrxnimzEsOshQfXVaDA_QM4YRZGq";
     }
   }
 
-  window.__boardDebugUpload = async function () {
-    const file = imageInput && imageInput.files && imageInput.files[0];
-    if (!file) {
-      console.log("[debug] no file selected - tap 'Add photo' and pick one first");
-      return;
-    }
-    console.log("[debug] compressing...", file.name, file.size);
-    const compressed = await compressImage(file, 1600, 0.82);
-    console.log("[debug] compressed", compressed.size, "- uploading via uploadOnce...");
-    const result = await uploadOnce(file, compressed, "image/jpeg");
-    console.log("[debug] uploadOnce result", result);
-  };
-
   const postBtn = document.getElementById("board-post-btn");
   if (postBtn) {
     postBtn.addEventListener("click", async () => {
       const textEl = document.getElementById("board-text");
       const text = textEl.value.trim();
-      // Read the file straight from the input at submit time rather than
+      // Read the files straight from the input at submit time rather than
       // trusting a variable captured earlier - more robust against mobile
-      // browsers that can lose JS state between picking a photo and
+      // browsers that can lose JS state between picking photos and
       // tapping Post.
-      const file = imageInput && imageInput.files && imageInput.files[0];
-      if (!text && !file) return;
+      const files = imageInput ? Array.from(imageInput.files || []) : [];
+      if (!text && !files.length) return;
 
       const nickname = (nicknameInput && nicknameInput.value.trim()) || "Anonymous";
       try {
@@ -429,11 +436,12 @@ const SUPABASE_KEY = "sb_publishable_Ci5wrxnimzEsOshQfXVaDA_QM4YRZGq";
       postBtn.disabled = true;
       postBtn.textContent = "Posting...";
 
-      let imageUrl = null;
-      if (file) {
-        postBtn.textContent = "Preparing photo...";
+      const imageUrls = [];
+      for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+        postBtn.textContent = files.length > 1 ? `Uploading photo ${i + 1}/${files.length}...` : "Preparing photo...";
         const compressed = await compressImage(file, 1600, 0.82);
-        postBtn.textContent = "Posting...";
+        postBtn.textContent = files.length > 1 ? `Uploading photo ${i + 1}/${files.length}...` : "Posting...";
         const { error: uploadError, url } = await uploadWithRetry(file, compressed, "image/jpeg");
         if (uploadError) {
           postBtn.disabled = false;
@@ -441,12 +449,13 @@ const SUPABASE_KEY = "sb_publishable_Ci5wrxnimzEsOshQfXVaDA_QM4YRZGq";
           alert("Image upload failed: " + uploadError.message + ". Please check your connection and try again.");
           return;
         }
-        imageUrl = url;
+        imageUrls.push(url);
       }
 
+      postBtn.textContent = "Posting...";
       const { error } = await sb
         .from("board_posts")
-        .insert({ nickname, body: text || null, image_url: imageUrl });
+        .insert({ nickname, body: text || null, image_urls: imageUrls.length ? imageUrls : null });
 
       postBtn.disabled = false;
       postBtn.textContent = "Post";
