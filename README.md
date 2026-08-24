@@ -3,12 +3,12 @@
 Free resource (and eventually app) for foreigners moving to Buenos Aires:
 step-by-step guides for the practical/bureaucratic stuff (DNI, CUIT/CUIL,
 visas, apostille, tax residency, bank account, housing, health insurance,
-SUBE/phone, money exchange), plus a growing waitlist. Monetization plan is
-affiliate/commission on relevant products (SIM cards, insurance, etc.),
-not subscriptions — the content stays free.
+SUBE/phone, money exchange), plus a growing email newsletter for new
+guides. Monetization plan is affiliate/commission on relevant products
+(SIM cards, insurance, etc.), not subscriptions — the content stays free.
 
 Started as a pure landing page to validate demand; now an installable PWA
-with 11+ guides, a waitlist funnel (Mailchimp), and analytics
+with 11+ guides, a newsletter signup (Mailchimp), and analytics
 (GoatCounter).
 
 ## Files
@@ -16,17 +16,19 @@ with 11+ guides, a waitlist funnel (Mailchimp), and analytics
 - `index.html` — homepage
 - `guides/` — all guide pages + the guides hub (`guides/index.html`)
 - `style.css` — shared styling (light/dark aware)
-- `script.js` — waitlist form handling + service worker registration
+- `script.js` — newsletter form handling + service worker registration
 - `guides/guide.js` — checklist checkbox persistence (localStorage)
 - `guides/country-select.js` — country tab switcher (apostille guide)
 - `manifest.json`, `sw.js`, `icons/` — PWA (installable, works offline for
   already-visited pages)
 
-## Waitlist
+## Newsletter
 
 Forms post to a Mailchimp audience (see the `action` URL in any
-`.waitlist-form`). Submissions require email confirmation (double
-opt-in) unless the address was previously imported as already-subscribed.
+`.waitlist-form` — the CSS class name is unchanged for now, only the
+visible copy says "Subscribe"). Submissions require email confirmation
+(double opt-in) unless the address was previously imported as
+already-subscribed.
 
 ## Deploy: GitHub Pages (free, no build step)
 
@@ -35,7 +37,7 @@ Settings → Pages → Deploy from a branch → `main` → `/ (root)`. Live at
 
 ## Status
 
-- [x] Landing page, waitlist (Mailchimp), analytics (GoatCounter)
+- [x] Homepage, newsletter signup (Mailchimp), analytics (GoatCounter)
 - [x] 11 guides covering the main visa/bureaucracy/practical topics
 - [x] PWA (installable on iOS/Android, no custom domain needed)
 - [ ] Custom domain — deliberately skipped for now (no budget), fine to
