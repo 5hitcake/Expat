@@ -77,6 +77,15 @@ body {
   font-size: 0.85rem;
   color: var(--text-muted);
 }
+.nav-board-link {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--accent);
+  text-decoration: none;
+}
+.nav-board-link:hover {
+  text-decoration: underline;
+}
 
 /* Hero */
 .hero {
@@ -371,6 +380,217 @@ h1 {
 }
 .sources a {
   color: var(--text);
+}
+
+/* Board */
+.board-body {
+  padding: 32px 0 72px;
+}
+.board-body .wrap {
+  max-width: 700px;
+}
+
+.board-gate {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 28px;
+  box-shadow: var(--shadow);
+  margin-bottom: 28px;
+}
+.board-gate h2 {
+  margin: 0 0 8px;
+  font-size: 1.15rem;
+}
+.board-gate p {
+  color: var(--text-muted);
+  font-size: 0.92rem;
+  margin: 0 0 18px;
+}
+.board-gate .waitlist-form {
+  max-width: 420px;
+  margin: 0;
+  justify-content: flex-start;
+}
+
+.board-composer {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 22px;
+  box-shadow: var(--shadow);
+  margin-bottom: 28px;
+}
+.board-composer input[type="text"],
+.board-composer textarea {
+  width: 100%;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--bg-alt);
+  color: var(--text);
+  font-family: inherit;
+  font-size: 0.95rem;
+  padding: 10px 14px;
+  margin-bottom: 10px;
+}
+.board-composer textarea {
+  min-height: 80px;
+  resize: vertical;
+}
+.composer-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.composer-image-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  font-size: 0.88rem;
+  color: var(--text-muted);
+  cursor: pointer;
+}
+.composer-image-name {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+}
+.board-post-btn {
+  padding: 10px 22px;
+  border: none;
+  border-radius: 10px;
+  background: var(--accent);
+  color: var(--accent-text);
+  font-weight: 700;
+  cursor: pointer;
+  font-family: inherit;
+}
+.board-post-btn:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.board-feed {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.board-empty {
+  color: var(--text-muted);
+  text-align: center;
+  padding: 32px 0;
+  font-size: 0.92rem;
+}
+.board-post {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: var(--shadow);
+}
+.board-post-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+.board-avatar {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: var(--accent-text);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.85rem;
+  flex-shrink: 0;
+  overflow: hidden;
+}
+.board-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.board-post-meta strong {
+  display: block;
+  font-size: 0.92rem;
+}
+.board-post-meta time {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+}
+.board-post-text {
+  font-size: 0.95rem;
+  white-space: pre-wrap;
+  margin: 0 0 10px;
+}
+.board-post-image {
+  max-width: 100%;
+  border-radius: 10px;
+  margin-bottom: 10px;
+  display: block;
+}
+.board-post-actions {
+  display: flex;
+  gap: 16px;
+  font-size: 0.85rem;
+}
+.board-post-actions button {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 0.85rem;
+  padding: 0;
+}
+.board-post-actions button:hover {
+  color: var(--accent);
+}
+.board-comments {
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px solid var(--border);
+}
+.board-comment {
+  display: flex;
+  gap: 8px;
+  font-size: 0.88rem;
+  margin-bottom: 8px;
+}
+.board-comment strong {
+  flex-shrink: 0;
+}
+.board-comment-form {
+  display: flex;
+  gap: 8px;
+  margin-top: 10px;
+}
+.board-comment-form input {
+  flex: 1;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg-alt);
+  color: var(--text);
+  font-family: inherit;
+  font-size: 0.88rem;
+  padding: 7px 12px;
+}
+.board-comment-form button {
+  border: none;
+  border-radius: 8px;
+  background: var(--accent);
+  color: var(--accent-text);
+  font-weight: 600;
+  font-size: 0.85rem;
+  padding: 7px 14px;
+  cursor: pointer;
+  font-family: inherit;
 }
 
 /* Install banner */

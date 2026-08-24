@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Board — Expat BA</title>
+<meta name="description" content="Share what's on your mind, ask questions, post photos — the community board for anyone moving to or living in Buenos Aires.">
+<link rel="stylesheet" href="style.css">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" type="image/png" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<meta name="theme-color" content="#d1603d">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Expat BA">
+<script data-goatcounter="https://expatba.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+</head>
+<body>
+
+<header class="nav">
+  <div class="wrap nav-inner">
+    <a href="index.html" class="logo">Expat<span class="logo-accent">BA</span></a>
+    <span class="nav-tag">Board</span>
+  </div>
+</header>
+
+<div id="install-banner" class="install-banner" hidden>
+  <div class="install-banner-inner">
+    <span id="install-banner-text">Add this to your home screen for quick access.</span>
+    <button type="button" id="install-btn" class="install-btn" hidden>Install</button>
+    <button type="button" id="install-dismiss" class="install-dismiss" aria-label="Dismiss">&times;</button>
+  </div>
+</div>
+
+<main>
+  <section class="guide-header">
+    <div class="wrap">
+      <p class="eyebrow">Community</p>
+      <h1>Board</h1>
+      <p class="lede">
+        Share what's on your mind, ask a question, post a photo — for
+        anyone moving to or living in Buenos Aires. Reading is open to
+        everyone; posting takes one quick step.
+      </p>
+    </div>
+  </section>
+
+  <section class="board-body">
+    <div class="wrap">
+
+      <div id="board-gate" class="board-gate" hidden>
+        <h2>Subscribe to post and comment</h2>
+        <p>
+          No password, no real name required — pick any nickname (or stay
+          Anonymous). Subscribing also gets you an email when new guides go
+          up, about once a week.
+        </p>
+        <form id="board-subscribe-form" class="waitlist-form" action="https://github.us9.list-manage.com/subscribe/post?u=e6c30ed4d6d1882f9bdfa49d0&amp;id=49d35b659f&amp;f_id=00eee9e3f0" method="POST" target="_blank">
+          <label for="board-email" class="sr-only">Email address</label>
+          <input id="board-email" name="EMAIL" type="email" placeholder="you@email.com" required autocomplete="email">
+          <div style="position: absolute; left: -5000px;" aria-hidden="true"><input type="text" name="b_e6c30ed4d6d1882f9bdfa49d0_49d35b659f" tabindex="-1" value=""></div>
+          <button type="submit" data-goatcounter-click="subscribe">Subscribe &amp; unlock posting</button>
+        </form>
+        <p id="board-gate-status" class="form-status"></p>
+      </div>
+
+      <div id="board-composer" class="board-composer" hidden>
+        <input type="text" id="board-nickname" maxlength="30" placeholder="Nickname (leave blank for Anonymous)">
+        <textarea id="board-text" maxlength="2000" placeholder="Share something with the community..."></textarea>
+        <div class="composer-actions">
+          <label class="composer-image-btn">
+            &#128247; Add photo
+            <input type="file" id="board-image" accept="image/*" hidden>
+          </label>
+          <span id="composer-image-name" class="composer-image-name"></span>
+          <button type="button" id="board-post-btn" class="board-post-btn">Post</button>
+        </div>
+      </div>
+
+      <div id="board-feed" class="board-feed">
+        <p class="board-empty">Loading...</p>
+      </div>
+
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <p><a href="index.html">&larr; Expat BA home</a></p>
+  </div>
+</footer>
+
+<script src="script.js"></script>
+<script src="board.js"></script>
+</body>
+</html>
