@@ -347,9 +347,41 @@ const SUPABASE_KEY = "sb_publishable_Ci5wrxnimzEsOshQfXVaDA_QM4YRZGq";
     });
   }
 
+  async function uploadOnce(path, blob, contentType) {
+    // Uploading via a raw binary POST instead of supabase-js's default
+    // (which wraps the file in multipart/form-data) - some ISP routers
+    // filter/mangle multipart file uploads, which showed up as a plain
+    // "Failed to fetch" with no useful detail.
+    const { data: sessionData } = await sb.auth.getSession();
+    const token = (sessionData.session && sessionData.session.access_token) || SUPABASE_KEY;
+    try {
+      const res = await fetch(`${SUPABASE_URL}/storage/v1/object/board-images/${path}`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          apikey: SUPABASE_KEY,
+          "Content-Type": contentType,
+          "x-upsert": "false",
+        },
+        body: blob,
+      });
+      if (res.ok) return { error: null };
+      let message = `HTTP ${res.status}`;
+      try {
+        const body = await res.json();
+        message = body.message || body.error || message;
+      } catch (err) {
+        // ignore - keep the HTTP status as the message
+      }
+      return { error: { message } };
+    } catch (err) {
+      return { error: { message: err.message || "Network error" } };
+    }
+  }
+
   async function uploadWithRetry(path, blob, contentType) {
     for (let attempt = 0; attempt < 2; attempt++) {
-      const { error } = await sb.storage.from("board-images").upload(path, blob, { contentType });
+      const { error } = await uploadOnce(path, blob, contentType);
       if (!error) return { error: null };
       if (attempt === 0) {
         await new Promise((resolve) => setTimeout(resolve, 1200));
