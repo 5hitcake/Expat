@@ -394,6 +394,19 @@ const SUPABASE_KEY = "sb_publishable_Ci5wrxnimzEsOshQfXVaDA_QM4YRZGq";
     }
   }
 
+  window.__boardDebugUpload = async function () {
+    const file = imageInput && imageInput.files && imageInput.files[0];
+    if (!file) {
+      console.log("[debug] no file selected - tap 'Add photo' and pick one first");
+      return;
+    }
+    console.log("[debug] compressing...", file.name, file.size);
+    const compressed = await compressImage(file, 1600, 0.82);
+    console.log("[debug] compressed", compressed.size, "- uploading via uploadOnce...");
+    const result = await uploadOnce(file, compressed, "image/jpeg");
+    console.log("[debug] uploadOnce result", result);
+  };
+
   const postBtn = document.getElementById("board-post-btn");
   if (postBtn) {
     postBtn.addEventListener("click", async () => {
