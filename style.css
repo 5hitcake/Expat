@@ -368,6 +368,10 @@ h1 {
 .site-footer a {
   color: var(--text-muted);
 }
+.footer-links {
+  margin-top: 6px;
+  font-size: 0.82rem;
+}
 
 /* Guide pages */
 .guide-header {
@@ -498,6 +502,15 @@ h1 {
   max-width: 700px;
 }
 
+.board-guidelines {
+  background: var(--bg-alt);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 14px 16px;
+  margin-bottom: 24px;
+  font-size: 0.86rem;
+  color: var(--text-muted);
+}
 .board-gate {
   background: var(--card-bg);
   border: 1px solid var(--border);

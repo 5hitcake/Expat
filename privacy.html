@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Privacy — Expat BA</title>
+<meta name="description" content="What Expat BA collects, why, and how to get your data removed.">
+<link rel="stylesheet" href="style.css?v=4">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" type="image/png" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<meta name="theme-color" content="#d1603d">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Expat BA">
+<script data-goatcounter="https://expatba.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+</head>
+<body>
+
+<header class="nav">
+  <div class="wrap nav-inner">
+    <a href="index.html" class="logo">Expat<span class="logo-accent">BA</span></a>
+    <a href="board.html" class="nav-board-link">Board</a>
+    <span class="nav-tag">Privacy</span>
+    <button type="button" id="menu-toggle" class="menu-toggle" aria-label="Menu">&#9776;</button>
+  </div>
+</header>
+
+<div id="install-banner" class="install-banner" hidden>
+  <div class="install-banner-inner">
+    <span id="install-banner-text">Add this to your home screen for quick access.</span>
+    <button type="button" id="install-btn" class="install-btn" hidden>Install</button>
+    <button type="button" id="install-dismiss" class="install-dismiss" aria-label="Dismiss">&times;</button>
+  </div>
+</div>
+
+<main>
+  <section class="guide-header">
+    <div class="wrap">
+      <p class="eyebrow">Privacy</p>
+      <h1>What we collect, and why</h1>
+      <p class="lede">
+        Expat BA is a small, independent project — not a company with a
+        legal team. This page is a plain-language explanation of what
+        happens with your data, not a formal legal document.
+      </p>
+    </div>
+  </section>
+
+  <section class="guide-body">
+    <div class="wrap">
+
+      <div class="phase">
+        <div class="phase-head">
+          <h2>Newsletter</h2>
+        </div>
+        <p class="phase-note">
+          If you subscribe, your email address is stored by
+          <strong>Mailchimp</strong> (The Rocket Science Group LLC), the
+          service we use to send updates — usually about one email a week
+          when new guides go up. Every email has an unsubscribe link that
+          removes you immediately. We never sell or share your email with
+          anyone else.
+        </p>
+      </div>
+
+      <div class="phase">
+        <div class="phase-head">
+          <h2>The Board</h2>
+        </div>
+        <p class="phase-note">
+          Posting doesn't require an email, password, or real name.
+          Subscribing creates an anonymous session (a random ID with no
+          personal info attached) that lets you post and comment — you
+          choose whether to use a nickname or stay "Anonymous". Posts,
+          comments, and photos you share are public and visible to anyone
+          who visits the Board.
+        </p>
+        <p class="phase-note">
+          Photos are stored with <strong>Supabase</strong>, the backend
+          service behind the Board. Like most web infrastructure, Supabase's
+          servers log basic technical data (like IP addresses) at the
+          hosting level for security and abuse prevention — this isn't
+          something we access directly.
+        </p>
+        <p class="phase-note">
+          You can delete your own posts and comments at any time from the
+          Board itself. Reporting a post or comment sends it to us for
+          review; we may remove content that breaks the
+          <a href="board.html">community guidelines</a>.
+        </p>
+      </div>
+
+      <div class="phase">
+        <div class="phase-head">
+          <h2>Analytics</h2>
+        </div>
+        <p class="phase-note">
+          We use <strong>GoatCounter</strong>, a privacy-friendly analytics
+          tool, to see roughly how many people visit and which pages are
+          useful. It doesn't use cookies, doesn't track you across sites,
+          and doesn't collect anything that identifies you personally — just
+          aggregate counts.
+        </p>
+      </div>
+
+      <div class="phase">
+        <div class="phase-head">
+          <h2>On your device</h2>
+        </div>
+        <p class="phase-note">
+          Checklist progress, your Board nickname, and a few preferences
+          (like dismissing the install banner) are saved in your browser's
+          local storage. This stays on your device — it's never sent to us.
+        </p>
+      </div>
+
+      <div class="phase">
+        <div class="phase-head">
+          <h2>Questions or requests</h2>
+        </div>
+        <p class="phase-note">
+          Want your data removed, or have a question about any of this?
+          Reply to any Expat BA newsletter email and it'll reach us.
+        </p>
+      </div>
+
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <p><a href="index.html">&larr; Expat BA home</a></p>
+  </div>
+</footer>
+
+<div id="site-menu-overlay" class="site-menu-overlay" hidden></div>
+<nav id="site-menu" class="site-menu" hidden aria-label="Site menu" data-root="">
+  <button type="button" id="site-menu-close" class="site-menu-close" aria-label="Close menu">&times;</button>
+  <a href="board.html" class="site-menu-board">Board</a>
+  <a href="index.html" class="site-menu-link">Home</a>
+  <p class="site-menu-heading">Guides</p>
+  <a href="guides/visa-decision.html" class="site-menu-link">Which visa <span class="site-menu-progress" data-progress="visa-decision"></span></a>
+  <a href="guides/apostille.html" class="site-menu-link">Apostille &amp; translations <span class="site-menu-progress" data-progress="apostille"></span></a>
+  <a href="guides/dni-cuit.html" class="site-menu-link">DNI, CUIT &amp; CUIL <span class="site-menu-progress" data-progress="dni-cuit"></span></a>
+  <a href="guides/tax-residency.html" class="site-menu-link">Tax residency <span class="site-menu-progress" data-progress="tax-residency"></span></a>
+  <a href="guides/housing.html" class="site-menu-link">Renting without a guarantor <span class="site-menu-progress" data-progress="housing"></span></a>
+  <a href="guides/neighborhoods.html" class="site-menu-link">Which neighborhood <span class="site-menu-progress" data-progress="neighborhoods"></span></a>
+  <a href="guides/health-insurance.html" class="site-menu-link">Health insurance <span class="site-menu-progress" data-progress="health-insurance"></span></a>
+  <a href="guides/bank-account.html" class="site-menu-link">Bank account <span class="site-menu-progress" data-progress="bank-account"></span></a>
+  <a href="guides/sube-phone.html" class="site-menu-link">SUBE &amp; phone plan <span class="site-menu-progress" data-progress="sube-phone"></span></a>
+  <a href="guides/money-exchange.html" class="site-menu-link">Changing money <span class="site-menu-progress" data-progress="money-exchange"></span></a>
+  <button type="button" id="site-menu-signout" class="site-menu-signout" hidden>Sign out of Board</button>
+</nav>
+
+<script src="script.js?v=11"></script>
+<script src="menu.js?v=2"></script>
+</body>
+</html>
