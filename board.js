@@ -304,6 +304,29 @@ const SUPABASE_KEY = "sb_publishable_Ci5wrxnimzEsOshQfXVaDA_QM4YRZGq";
     wireUpFeed(posts, commentsByPost);
   }
 
+  const lightbox = document.getElementById("board-lightbox");
+  const lightboxImg = document.getElementById("board-lightbox-img");
+  const lightboxClose = document.getElementById("board-lightbox-close");
+  if (lightbox && lightboxImg) {
+    feed.addEventListener("click", (event) => {
+      const img = event.target.closest(".board-post-image, .board-post-gallery img");
+      if (!img) return;
+      lightboxImg.src = img.src;
+      lightbox.hidden = false;
+    });
+    const closeLightbox = () => {
+      lightbox.hidden = true;
+      lightboxImg.src = "";
+    };
+    if (lightboxClose) lightboxClose.addEventListener("click", closeLightbox);
+    lightbox.addEventListener("click", (event) => {
+      if (event.target === lightbox) closeLightbox();
+    });
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape" && !lightbox.hidden) closeLightbox();
+    });
+  }
+
   await updateGateState();
   await loadFeed();
 
