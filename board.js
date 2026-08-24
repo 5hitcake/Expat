@@ -356,8 +356,10 @@ const SUPABASE_KEY = "sb_publishable_Ci5wrxnimzEsOshQfXVaDA_QM4YRZGq";
     // blocking the direct browser request.
     const { data: sessionData } = await sb.auth.getSession();
     const token = (sessionData.session && sessionData.session.access_token) || SUPABASE_KEY;
+    const url = `${SUPABASE_URL}/functions/v1/super-action`;
+    console.log("[board upload] starting", { url, contentType, blobSize: blob.size, blobType: blob.type, hasToken: !!token });
     try {
-      const res = await fetch(`${SUPABASE_URL}/functions/v1/super-action`, {
+      const res = await fetch(url, {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -367,10 +369,15 @@ const SUPABASE_KEY = "sb_publishable_Ci5wrxnimzEsOshQfXVaDA_QM4YRZGq";
         },
         body: blob,
       });
-      const body = await res.json().catch(() => ({}));
+      console.log("[board upload] got response", res.status, res.type, res.ok);
+      const body = await res.json().catch((e) => {
+        console.log("[board upload] body was not JSON", e && e.message);
+        return {};
+      });
       if (res.ok && body.url) return { error: null, url: body.url };
       return { error: { message: body.error || `HTTP ${res.status}` } };
     } catch (err) {
+      console.error("[board upload] fetch threw", err.name, err.message, err);
       return { error: { message: err.message || "Network error" } };
     }
   }
