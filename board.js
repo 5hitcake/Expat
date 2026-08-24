@@ -14,15 +14,18 @@ const SUPABASE_KEY = "sb_publishable_Ci5wrxnimzEsOshQfXVaDA_QM4YRZGq";
   const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
   const NICKNAME_KEY = "board-nickname";
+  let currentUserId = null;
 
   async function updateGateState() {
     const { data } = await sb.auth.getSession();
     if (data.session) {
       gate.hidden = true;
       composer.hidden = false;
+      currentUserId = data.session.user.id;
     } else {
       gate.hidden = false;
       composer.hidden = true;
+      currentUserId = null;
     }
   }
 
@@ -38,7 +41,8 @@ const SUPABASE_KEY = "sb_publishable_Ci5wrxnimzEsOshQfXVaDA_QM4YRZGq";
       } catch (err) {
         // ignore - gate stays up, they can try the button again
       }
-      updateGateState();
+      await updateGateState();
+      loadFeed();
     });
   }
 
@@ -80,25 +84,47 @@ const SUPABASE_KEY = "sb_publishable_Ci5wrxnimzEsOshQfXVaDA_QM4YRZGq";
     return div.innerHTML;
   }
 
+  function ownerActionsHtml(kind, id) {
+    return `
+      <div class="board-owner-actions">
+        <button type="button" class="board-edit-btn" data-edit-${kind}="${id}">Edit</button>
+        <button type="button" class="board-delete-btn" data-delete-${kind}="${id}">Delete</button>
+      </div>
+    `;
+  }
+
+  function renderComment(c) {
+    const isOwner = currentUserId && c.user_id === currentUserId;
+    return `
+      <div class="board-comment" data-comment-id="${c.id}">
+        <div class="board-comment-main">
+          <div class="board-comment-body" data-comment-body="${c.id}">
+            <strong>${escapeHtml(c.nickname || "Anonymous")}:</strong> <span>${escapeHtml(c.body)}</span>
+          </div>
+          ${isOwner ? ownerActionsHtml("comment", c.id) : ""}
+        </div>
+      </div>
+    `;
+  }
+
   function renderPost(post, postComments) {
-    const commentsHtml = postComments
-      .map(
-        (c) =>
-          `<div class="board-comment"><strong>${escapeHtml(c.nickname || "Anonymous")}:</strong> <span>${escapeHtml(c.body)}</span></div>`
-      )
-      .join("");
+    const isOwner = currentUserId && post.user_id === currentUserId;
+    const commentsHtml = postComments.map((c) => renderComment(c)).join("");
 
     return `
-      <div class="board-post">
+      <div class="board-post" data-post-id="${post.id}">
         <div class="board-post-header">
           <div class="board-avatar">${initials(post.nickname)}</div>
           <div class="board-post-meta">
             <strong>${escapeHtml(post.nickname || "Anonymous")}</strong>
             <time>${timeAgo(post.created_at)}</time>
           </div>
+          ${isOwner ? ownerActionsHtml("post", post.id) : ""}
         </div>
-        ${post.body ? `<p class="board-post-text">${escapeHtml(post.body)}</p>` : ""}
-        ${post.image_url ? `<img class="board-post-image" src="${post.image_url}" alt="">` : ""}
+        <div class="board-post-body" data-post-body="${post.id}">
+          ${post.body ? `<p class="board-post-text">${escapeHtml(post.body)}</p>` : ""}
+          ${post.image_url ? `<img class="board-post-image" src="${post.image_url}" alt="">` : ""}
+        </div>
         <div class="board-post-actions">
           <button type="button" data-toggle-comments="${post.id}">${postComments.length} comments</button>
           <button type="button" data-report="${post.id}">Report</button>
@@ -114,7 +140,29 @@ const SUPABASE_KEY = "sb_publishable_Ci5wrxnimzEsOshQfXVaDA_QM4YRZGq";
     `;
   }
 
-  function wireUpFeed(posts) {
+  function enterEditMode(container, currentText, onSave) {
+    const original = container.innerHTML;
+    container.innerHTML = `
+      <textarea class="board-edit-textarea" maxlength="2000">${escapeHtml(currentText || "")}</textarea>
+      <div class="board-edit-actions">
+        <button type="button" class="board-save-btn">Save</button>
+        <button type="button" class="board-cancel-btn">Cancel</button>
+      </div>
+    `;
+    const textarea = container.querySelector(".board-edit-textarea");
+    textarea.focus();
+    container.querySelector(".board-cancel-btn").addEventListener("click", () => {
+      container.innerHTML = original;
+    });
+    const saveBtn = container.querySelector(".board-save-btn");
+    saveBtn.addEventListener("click", async () => {
+      saveBtn.disabled = true;
+      saveBtn.textContent = "Saving...";
+      await onSave(textarea.value.trim());
+    });
+  }
+
+  function wireUpFeed(posts, commentsByPost) {
     posts.forEach((post) => {
       const toggleBtn = feed.querySelector(`[data-toggle-comments="${post.id}"]`);
       const commentsBox = feed.querySelector(`[data-comments="${post.id}"]`);
@@ -155,6 +203,67 @@ const SUPABASE_KEY = "sb_publishable_Ci5wrxnimzEsOshQfXVaDA_QM4YRZGq";
           }
         });
       }
+
+      const editPostBtn = feed.querySelector(`[data-edit-post="${post.id}"]`);
+      if (editPostBtn) {
+        editPostBtn.addEventListener("click", () => {
+          const bodyEl = feed.querySelector(`[data-post-body="${post.id}"]`);
+          enterEditMode(bodyEl, post.body, async (newText) => {
+            const { error } = await sb.from("board_posts").update({ body: newText || null }).eq("id", post.id);
+            if (error) alert("Could not save changes: " + error.message);
+            loadFeed();
+          });
+        });
+      }
+
+      const deletePostBtn = feed.querySelector(`[data-delete-post="${post.id}"]`);
+      if (deletePostBtn) {
+        deletePostBtn.addEventListener("click", async () => {
+          if (!confirm("Delete this post? This can't be undone.")) return;
+          deletePostBtn.disabled = true;
+          const { error } = await sb.from("board_posts").delete().eq("id", post.id);
+          if (error) {
+            alert("Could not delete: " + error.message);
+            deletePostBtn.disabled = false;
+            return;
+          }
+          loadFeed();
+        });
+      }
+
+      (commentsByPost[post.id] || []).forEach((c) => {
+        const editCommentBtn = feed.querySelector(`[data-edit-comment="${c.id}"]`);
+        if (editCommentBtn) {
+          editCommentBtn.addEventListener("click", () => {
+            const bodyEl = feed.querySelector(`[data-comment-body="${c.id}"]`);
+            enterEditMode(bodyEl, c.body, async (newText) => {
+              if (!newText) {
+                alert("Comment can't be empty.");
+                loadFeed();
+                return;
+              }
+              const { error } = await sb.from("board_comments").update({ body: newText }).eq("id", c.id);
+              if (error) alert("Could not save changes: " + error.message);
+              loadFeed();
+            });
+          });
+        }
+
+        const deleteCommentBtn = feed.querySelector(`[data-delete-comment="${c.id}"]`);
+        if (deleteCommentBtn) {
+          deleteCommentBtn.addEventListener("click", async () => {
+            if (!confirm("Delete this comment?")) return;
+            deleteCommentBtn.disabled = true;
+            const { error } = await sb.from("board_comments").delete().eq("id", c.id);
+            if (error) {
+              alert("Could not delete: " + error.message);
+              deleteCommentBtn.disabled = false;
+              return;
+            }
+            loadFeed();
+          });
+        }
+      });
     });
   }
 
@@ -182,25 +291,27 @@ const SUPABASE_KEY = "sb_publishable_Ci5wrxnimzEsOshQfXVaDA_QM4YRZGq";
     });
 
     feed.innerHTML = posts.map((post) => renderPost(post, commentsByPost[post.id] || [])).join("");
-    wireUpFeed(posts);
+    wireUpFeed(posts, commentsByPost);
   }
 
   await updateGateState();
   await loadFeed();
 
-  let pendingFile = null;
   const imageInput = document.getElementById("board-image");
   const imageNameLabel = document.getElementById("composer-image-name");
   if (imageInput) {
     imageInput.addEventListener("change", () => {
       const file = imageInput.files[0];
-      if (!file) return;
+      if (!file) {
+        if (imageNameLabel) imageNameLabel.textContent = "";
+        return;
+      }
       if (file.size > 5 * 1024 * 1024) {
         alert("Please choose an image under 5MB.");
         imageInput.value = "";
+        if (imageNameLabel) imageNameLabel.textContent = "";
         return;
       }
-      pendingFile = file;
       if (imageNameLabel) imageNameLabel.textContent = file.name;
     });
   }
@@ -210,7 +321,12 @@ const SUPABASE_KEY = "sb_publishable_Ci5wrxnimzEsOshQfXVaDA_QM4YRZGq";
     postBtn.addEventListener("click", async () => {
       const textEl = document.getElementById("board-text");
       const text = textEl.value.trim();
-      if (!text && !pendingFile) return;
+      // Read the file straight from the input at submit time rather than
+      // trusting a variable captured earlier - more robust against mobile
+      // browsers that can lose JS state between picking a photo and
+      // tapping Post.
+      const file = imageInput && imageInput.files && imageInput.files[0];
+      if (!text && !file) return;
 
       const nickname = (nicknameInput && nicknameInput.value.trim()) || "Anonymous";
       try {
@@ -223,12 +339,12 @@ const SUPABASE_KEY = "sb_publishable_Ci5wrxnimzEsOshQfXVaDA_QM4YRZGq";
       postBtn.textContent = "Posting...";
 
       let imageUrl = null;
-      if (pendingFile) {
-        const safeName = pendingFile.name.replace(/[^a-zA-Z0-9.\-_]/g, "_");
+      if (file) {
+        const safeName = file.name.replace(/[^a-zA-Z0-9.\-_]/g, "_");
         const path = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}-${safeName}`;
         const { error: uploadError } = await sb.storage
           .from("board-images")
-          .upload(path, pendingFile, { contentType: pendingFile.type || "image/jpeg" });
+          .upload(path, file, { contentType: file.type || "image/jpeg" });
         if (uploadError) {
           postBtn.disabled = false;
           postBtn.textContent = "Post";
@@ -248,7 +364,6 @@ const SUPABASE_KEY = "sb_publishable_Ci5wrxnimzEsOshQfXVaDA_QM4YRZGq";
 
       if (!error) {
         textEl.value = "";
-        pendingFile = null;
         if (imageInput) imageInput.value = "";
         if (imageNameLabel) imageNameLabel.textContent = "";
         loadFeed();

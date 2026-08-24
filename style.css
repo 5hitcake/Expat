@@ -497,6 +497,70 @@ h1 {
   gap: 10px;
   margin-bottom: 10px;
 }
+.board-owner-actions {
+  display: flex;
+  gap: 10px;
+  margin-left: auto;
+  flex-shrink: 0;
+}
+.board-owner-actions button {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 0.78rem;
+  padding: 0;
+}
+.board-owner-actions .board-edit-btn:hover {
+  color: var(--accent);
+}
+.board-owner-actions .board-delete-btn:hover {
+  color: #c0392b;
+}
+.board-edit-textarea {
+  width: 100%;
+  min-height: 70px;
+  padding: 8px 10px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg-alt);
+  color: var(--text);
+  font-family: inherit;
+  font-size: 0.95rem;
+  resize: vertical;
+  box-sizing: border-box;
+}
+.board-edit-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 8px;
+}
+.board-edit-actions .board-save-btn {
+  padding: 6px 14px;
+  border: none;
+  border-radius: 8px;
+  background: var(--accent);
+  color: var(--accent-text);
+  font-weight: 700;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 0.82rem;
+}
+.board-edit-actions .board-save-btn:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+.board-edit-actions .board-cancel-btn {
+  padding: 6px 14px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: none;
+  color: var(--text);
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 0.82rem;
+}
 .board-avatar {
   width: 34px;
   height: 34px;
@@ -558,13 +622,27 @@ h1 {
   border-top: 1px solid var(--border);
 }
 .board-comment {
-  display: flex;
-  gap: 8px;
   font-size: 0.88rem;
   margin-bottom: 8px;
 }
+.board-comment-main {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+.board-comment-body {
+  flex: 1;
+}
 .board-comment strong {
   flex-shrink: 0;
+}
+.board-comment .board-owner-actions {
+  margin-left: 0;
+  flex-shrink: 0;
+}
+.board-comment .board-edit-textarea {
+  min-height: 50px;
+  font-size: 0.88rem;
 }
 .board-comment-form {
   display: flex;
