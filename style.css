@@ -373,6 +373,49 @@ h1 {
   color: var(--text);
 }
 
+/* Install banner */
+.install-banner {
+  background: var(--accent);
+  color: var(--accent-text);
+}
+.install-banner-inner {
+  max-width: 880px;
+  margin: 0 auto;
+  padding: 10px 24px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+  font-size: 0.9rem;
+}
+.install-banner-inner span {
+  flex: 1 1 200px;
+}
+.install-btn {
+  padding: 7px 16px;
+  border: none;
+  border-radius: 8px;
+  background: var(--accent-text);
+  color: var(--accent);
+  font-weight: 700;
+  font-size: 0.85rem;
+  cursor: pointer;
+  font-family: inherit;
+}
+.install-dismiss {
+  border: none;
+  background: transparent;
+  color: var(--accent-text);
+  font-size: 1.2rem;
+  line-height: 1;
+  cursor: pointer;
+  padding: 4px;
+  opacity: 0.8;
+}
+.install-dismiss:hover {
+  opacity: 1;
+}
+
 /* Country selector */
 .country-tabs {
   display: flex;
