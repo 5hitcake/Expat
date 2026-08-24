@@ -27,7 +27,9 @@
       const raw = localStorage.getItem(`guide-progress:${id}`);
       if (!raw) return;
       const { done, total } = JSON.parse(raw);
-      if (total) el.textContent = `${done}/${total}`;
+      if (!total) return;
+      el.textContent = done >= total ? "✓" : `${done}/${total}`;
+      if (done >= total) el.classList.add("site-menu-progress-done");
     } catch (err) {
       // ignore
     }

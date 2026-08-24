@@ -176,6 +176,11 @@ body {
   color: var(--text-muted);
   flex-shrink: 0;
 }
+.site-menu-progress-done {
+  color: #3a8f5c;
+  font-weight: 700;
+  font-size: 0.9rem;
+}
 .site-menu-signout {
   margin-top: auto;
   padding-top: 18px;
