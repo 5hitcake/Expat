@@ -316,6 +316,49 @@ const SUPABASE_KEY = "sb_publishable_Ci5wrxnimzEsOshQfXVaDA_QM4YRZGq";
     });
   }
 
+  function compressImage(file, maxDim, quality) {
+    return new Promise((resolve) => {
+      const img = new Image();
+      const url = URL.createObjectURL(file);
+      img.onload = () => {
+        URL.revokeObjectURL(url);
+        let { width, height } = img;
+        if (width > maxDim || height > maxDim) {
+          if (width > height) {
+            height = Math.round((height * maxDim) / width);
+            width = maxDim;
+          } else {
+            width = Math.round((width * maxDim) / height);
+            height = maxDim;
+          }
+        }
+        const canvas = document.createElement("canvas");
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext("2d");
+        ctx.drawImage(img, 0, 0, width, height);
+        canvas.toBlob((blob) => resolve(blob || file), "image/jpeg", quality);
+      };
+      img.onerror = () => {
+        URL.revokeObjectURL(url);
+        resolve(file);
+      };
+      img.src = url;
+    });
+  }
+
+  async function uploadWithRetry(path, blob, contentType) {
+    for (let attempt = 0; attempt < 2; attempt++) {
+      const { error } = await sb.storage.from("board-images").upload(path, blob, { contentType });
+      if (!error) return { error: null };
+      if (attempt === 0) {
+        await new Promise((resolve) => setTimeout(resolve, 1200));
+      } else {
+        return { error };
+      }
+    }
+  }
+
   const postBtn = document.getElementById("board-post-btn");
   if (postBtn) {
     postBtn.addEventListener("click", async () => {
@@ -340,15 +383,15 @@ const SUPABASE_KEY = "sb_publishable_Ci5wrxnimzEsOshQfXVaDA_QM4YRZGq";
 
       let imageUrl = null;
       if (file) {
-        const safeName = file.name.replace(/[^a-zA-Z0-9.\-_]/g, "_");
-        const path = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}-${safeName}`;
-        const { error: uploadError } = await sb.storage
-          .from("board-images")
-          .upload(path, file, { contentType: file.type || "image/jpeg" });
+        postBtn.textContent = "Preparing photo...";
+        const compressed = await compressImage(file, 1600, 0.82);
+        const path = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}.jpg`;
+        postBtn.textContent = "Posting...";
+        const { error: uploadError } = await uploadWithRetry(path, compressed, "image/jpeg");
         if (uploadError) {
           postBtn.disabled = false;
           postBtn.textContent = "Post";
-          alert("Image upload failed: " + uploadError.message);
+          alert("Image upload failed: " + uploadError.message + ". Please check your connection and try again.");
           return;
         }
         const { data } = sb.storage.from("board-images").getPublicUrl(path);
