@@ -1,3 +1,10 @@
+if ("serviceWorker" in navigator && document.currentScript) {
+  const swUrl = new URL("sw.js", document.currentScript.src).href;
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register(swUrl).catch(() => {});
+  });
+}
+
 document.querySelectorAll(".waitlist-form").forEach((form) => {
   form.addEventListener("submit", async (event) => {
     if (form.action.includes("list-manage.com")) {
