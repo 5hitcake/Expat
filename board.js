@@ -357,7 +357,7 @@ const SUPABASE_KEY = "sb_publishable_Ci5wrxnimzEsOshQfXVaDA_QM4YRZGq";
     const { data: sessionData } = await sb.auth.getSession();
     const token = (sessionData.session && sessionData.session.access_token) || SUPABASE_KEY;
     try {
-      const res = await fetch(`${SUPABASE_URL}/functions/v1/upload-board-image`, {
+      const res = await fetch(`${SUPABASE_URL}/functions/v1/super-action`, {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,
