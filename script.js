@@ -68,6 +68,15 @@ if ("serviceWorker" in navigator && document.currentScript) {
   });
 })();
 
+if (typeof Lenis !== "undefined" && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+  const lenis = new Lenis();
+  function raf(time) {
+    lenis.raf(time);
+    requestAnimationFrame(raf);
+  }
+  requestAnimationFrame(raf);
+}
+
 document.querySelectorAll(".waitlist-form").forEach((form) => {
   form.addEventListener("submit", async (event) => {
     if (form.action.includes("list-manage.com")) {
