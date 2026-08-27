@@ -84,6 +84,15 @@ const SUPABASE_KEY = "sb_publishable_Ci5wrxnimzEsOshQfXVaDA_QM4YRZGq";
     return div.innerHTML;
   }
 
+  function linkify(escapedText) {
+    return escapedText.replace(/(https?:\/\/[^\s<]+)/g, (url) => {
+      const trailing = url.match(/[.,;:!?)\]]+$/);
+      const clean = trailing ? url.slice(0, -trailing[0].length) : url;
+      const suffix = trailing ? trailing[0] : "";
+      return `<a href="${clean}" target="_blank" rel="noopener noreferrer nofollow">${clean}</a>${suffix}`;
+    });
+  }
+
   function ownerActionsHtml(kind, id) {
     return `
       <div class="board-owner-actions">
@@ -99,7 +108,7 @@ const SUPABASE_KEY = "sb_publishable_Ci5wrxnimzEsOshQfXVaDA_QM4YRZGq";
       <div class="board-comment" data-comment-id="${c.id}">
         <div class="board-comment-main">
           <div class="board-comment-body" data-comment-body="${c.id}">
-            <strong>${escapeHtml(c.nickname || "Anonymous")}:</strong> <span>${escapeHtml(c.body)}</span>
+            <strong>${escapeHtml(c.nickname || "Anonymous")}:</strong> <span>${linkify(escapeHtml(c.body))}</span>
           </div>
           ${isOwner ? ownerActionsHtml("comment", c.id) : ""}
         </div>
@@ -132,7 +141,7 @@ const SUPABASE_KEY = "sb_publishable_Ci5wrxnimzEsOshQfXVaDA_QM4YRZGq";
           ${isOwner ? ownerActionsHtml("post", post.id) : ""}
         </div>
         <div class="board-post-body" data-post-body="${post.id}">
-          ${post.body ? `<p class="board-post-text">${escapeHtml(post.body)}</p>` : ""}
+          ${post.body ? `<p class="board-post-text">${linkify(escapeHtml(post.body))}</p>` : ""}
           ${imagesHtml(post)}
         </div>
         <div class="board-post-actions">

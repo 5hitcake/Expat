@@ -751,6 +751,11 @@ h1 {
   white-space: pre-wrap;
   margin: 0 0 10px;
 }
+.board-post-text a,
+.board-comment a {
+  color: #3a7bd5;
+  word-break: break-all;
+}
 .board-post-image {
   max-width: 100%;
   border-radius: 10px;
