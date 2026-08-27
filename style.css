@@ -463,19 +463,20 @@ h1 {
   border-top: none;
 }
 .checklist label {
-  display: flex;
-  align-items: flex-start;
-  gap: 12px;
-  padding: 12px 2px;
+  display: block;
+  position: relative;
+  padding: 12px 2px 12px 32px;
   cursor: pointer;
   font-size: 0.97rem;
 }
 .checklist input[type="checkbox"] {
-  margin-top: 4px;
+  position: absolute;
+  left: 2px;
+  top: 15px;
+  margin: 0;
   width: 18px;
   height: 18px;
   accent-color: var(--accent);
-  flex-shrink: 0;
 }
 .checklist input[type="checkbox"]:checked + span,
 .checklist li:has(input:checked) label {
