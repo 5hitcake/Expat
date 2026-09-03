@@ -422,6 +422,9 @@ h1 {
 .affiliate-box p {
   margin: 0;
 }
+.affiliate-box p + p {
+  margin-top: 10px;
+}
 .affiliate-box a {
   color: var(--accent);
   font-weight: 600;
