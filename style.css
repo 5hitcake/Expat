@@ -429,6 +429,24 @@ h1 {
   color: var(--accent);
   font-weight: 600;
 }
+.affiliate-logo-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+.affiliate-logo {
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  padding: 3px;
+}
+.affiliate-logo-row strong {
+  font-size: 0.95rem;
+}
 .affiliate-disclosure {
   display: block;
   margin-top: 6px;
