@@ -438,11 +438,16 @@ h1 {
 .affiliate-logo {
   width: 28px;
   height: 28px;
-  object-fit: contain;
-  background: #fff;
-  border: 1px solid var(--border);
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--accent);
+  color: var(--accent-text);
   border-radius: 7px;
-  padding: 3px;
+  font-weight: 700;
+  font-size: 0.72rem;
+  letter-spacing: 0.02em;
 }
 .affiliate-logo-row strong {
   font-size: 0.95rem;
