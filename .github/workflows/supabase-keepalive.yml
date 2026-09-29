@@ -1,13 +1,15 @@
 name: Supabase keep-alive
 
 # Supabase's free tier pauses a project after 7 days without API activity.
-# This pings the REST API twice a week (well under that limit) so the
-# Board never gets auto-paused. Uses the same public anon key that's
-# already shipped client-side in board.js — read-only, RLS-protected.
+# This pings the REST API daily so the Board never gets auto-paused, even
+# accounting for a lag in how Supabase's own inactivity scan picks up
+# recent requests (a twice-weekly ping still triggered a pause warning).
+# Uses the same public anon key that's already shipped client-side in
+# board.js — read-only, RLS-protected.
 
 on:
   schedule:
-    - cron: "0 8 * * 1,4"
+    - cron: "0 8 * * *"
   workflow_dispatch:
 
 jobs:
