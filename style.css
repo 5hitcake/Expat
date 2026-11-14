@@ -1001,3 +1001,29 @@ h1 {
 .country-panel.active {
   display: block;
 }
+
+/* Scroll reveal: content blocks fade/slide in as they enter the viewport
+   (see script.js). .country-panel is excluded since it's shown/hidden by
+   the tab logic above, not scroll position. */
+.phase,
+.feature-card,
+.affiliate-box {
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+.phase.is-visible,
+.feature-card.is-visible,
+.affiliate-box.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+@media (prefers-reduced-motion: reduce) {
+  .phase,
+  .feature-card,
+  .affiliate-box {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
